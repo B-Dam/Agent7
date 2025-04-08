@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public int CardCount = 0;
     float time = 30.0f;
     public bool isHidden = false;
+    public bool isClear = false;
 
     private void Awake()
     {
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isClear = false;
+
         Time.timeScale = 1;
         
         if (SceneManager.GetActiveScene().name == "HiddenScene")
@@ -64,6 +67,7 @@ public class GameManager : MonoBehaviour
             CardCount -= 2;
             if (CardCount == 0)
             {
+                MySceneManager.instance.Clear();
                 Time.timeScale = 0;
                 EndTxt.SetActive(true);
             }
