@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -15,7 +16,8 @@ public class GameManager : MonoBehaviour
     public GameObject EndTxt;
 
     public int CardCount = 0;
-    float time = 0.0f;
+    float time = 30.0f;
+    public bool isHidden = false;
 
     private void Awake()
     {
@@ -29,14 +31,29 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1;
+        
+        if (SceneManager.GetActiveScene().name == "HiddenScene")
+        {
+            if (!isHidden)
+            {
+                isHidden = true;
+                time = 15.0f;
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        timeTxt.text = time.ToString("N2");
+        time -= Time.deltaTime;
+        timeTxt.text = time.ToString("N2"); 
+
+        if(time < 0)
+        {
+            GameOver();
+        }
     }
+
 
     public void Matched()
     {
@@ -58,5 +75,11 @@ public class GameManager : MonoBehaviour
         }
         firstCard = null;
         secondCard = null;
+    }
+
+    void GameOver()
+    {
+        Time.timeScale = 0;
+        EndTxt.SetActive(true);
     }
 }
