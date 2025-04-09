@@ -13,12 +13,19 @@ public class GameManager : MonoBehaviour
     public Card secondCard;
 
     public Text timeTxt;
-    public GameObject EndTxt;
+    public GameObject GameOverPanel;
+    public GameObject FirstClearPanel;
+    public GameObject ClearPanel;
 
     public int CardCount = 0;
     float time = 30.0f;
     public bool isHidden = false;
     public bool isClear = false;
+
+    public bool firstClear = false;
+    public bool hasShownFirstClearPanel = false;
+
+    public Animator animator;
 
     private void Awake()
     {
@@ -26,15 +33,15 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        firstClear = PlayerPrefs.GetInt("FirstClear", 0) == 1;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         isClear = false;
-
         Time.timeScale = 1;
-        
+
         if (SceneManager.GetActiveScene().name == "HiddenScene")
         {
             if (!isHidden)
@@ -45,18 +52,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         time -= Time.deltaTime;
-        timeTxt.text = time.ToString("N2"); 
+        timeTxt.text = time.ToString("N2");
 
-        if(time < 0)
+        if (time <= 10.0f)
+        {
+            animator.SetBool("isLowTime", true);
+        }
+        else
+        {
+            animator.SetBool("isLowTime", false);
+        }
+
+        if (time < 0)
         {
             GameOver();
         }
     }
-
 
     public void Matched()
     {
@@ -65,11 +79,26 @@ public class GameManager : MonoBehaviour
             firstCard.DestroyCard();
             secondCard.DestroyCard();
             CardCount -= 2;
+
             if (CardCount == 0)
             {
-                MySceneManager.instance.Clear();
+                if (SceneManager.GetActiveScene().name == "HiddenScene")
+                {
+                    MySceneManager.instance.HiddenClear();
+                }
+                else
+                {
+                    MySceneManager.instance.Clear();
+                }
+
+                ClearLevel();
+
+                if (hasShownFirstClearPanel == false)
+                {
+                    ClearPanel.SetActive(true);
+                }
+
                 Time.timeScale = 0;
-                EndTxt.SetActive(true);
             }
         }
         else
@@ -77,6 +106,7 @@ public class GameManager : MonoBehaviour
             firstCard.CloseCard();
             secondCard.CloseCard();
         }
+
         firstCard = null;
         secondCard = null;
     }
@@ -84,6 +114,21 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         Time.timeScale = 0;
-        EndTxt.SetActive(true);
+        GameOverPanel.SetActive(true);
+    }
+
+    public void ClearLevel()
+    {
+        if (!firstClear)
+        {
+            firstClear = true;
+
+            // PlayerPrefs¿¡ ÀúÀå
+            PlayerPrefs.SetInt("FirstClear", 1);
+            PlayerPrefs.Save();
+
+            FirstClearPanel.SetActive(true);
+            hasShownFirstClearPanel = true;
+        }
     }
 }

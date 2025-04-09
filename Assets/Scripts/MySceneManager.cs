@@ -9,7 +9,10 @@ public class MySceneManager : MonoBehaviour
     public Button TittleButton;
     public Button IntroduceButton;
 
+    public Image IntroduceButtonImg;
+
     public bool isClear;
+    public bool isHiddenClear;
 
 
     private void Awake()
@@ -24,19 +27,34 @@ public class MySceneManager : MonoBehaviour
         }
 
          DontDestroyOnLoad(gameObject);
+
+        isClear = PlayerPrefs.GetInt("FirstClear", 0) == 1;
+        isHiddenClear = PlayerPrefs.GetInt("HiddenClear", 0) == 1;
     }
     void Start()
     {
-        isClear = false;
-
-        TittleButton.GetComponent<Button>().enabled = false;
-        IntroduceButton.GetComponent<Button>().enabled = false;
-
+        if (TittleButton != null)
+        {
+            TittleButton.enabled = false;
+        }
+        if (IntroduceButton != null)
+        { 
+            IntroduceButton.enabled = false;
+        }
     }
 
     public void Clear()
     {
         isClear = true;
+        PlayerPrefs.SetInt("FirstClear", 1);
+        PlayerPrefs.Save();
+    }
+
+    public void HiddenClear()
+    {
+        isHiddenClear = true;
+        PlayerPrefs.SetInt("HiddenClear", 1);
+        PlayerPrefs.Save();
     }
 
     void OnEnable()
@@ -52,12 +70,23 @@ public class MySceneManager : MonoBehaviour
         {
             TittleButton = GameObject.Find("TittleButton").GetComponent<Button>();
             IntroduceButton = GameObject.Find("IntroduceButton").GetComponent<Button>();
-            
+            IntroduceButtonImg = GameObject.Find("IntroduceButton").GetComponent <Image>();
+
             if (isClear)
             {
-                TittleButton.GetComponent<Button>().enabled = true;
-                IntroduceButton.GetComponent<Button>().enabled = true;
+                if (TittleButton != null)
+                    TittleButton.enabled = true;
+                if (IntroduceButton != null)
+                    IntroduceButton.enabled = true;
+
                 Debug.Log("버튼 잠금 해제");
+                if (IntroduceButtonImg != null)
+                    IntroduceButtonImg.color = Color.white;
+            }
+
+            if (isHiddenClear)
+            {
+                Debug.Log("왕관 출력");
             }
         }
     }
