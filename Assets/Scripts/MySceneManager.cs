@@ -33,13 +33,22 @@ public class MySceneManager : MonoBehaviour
     }
     void Start()
     {
+        UpdateButtonInteractability();
+    }
+
+    void UpdateButtonInteractability()
+    {
         if (TittleButton != null)
         {
-            TittleButton.enabled = false;
+            TittleButton.interactable = isClear; // 클리어 상태에 따라 활성화
         }
         if (IntroduceButton != null)
-        { 
-            IntroduceButton.enabled = false;
+        {
+            IntroduceButton.interactable = isClear; // 클리어 상태에 따라 활성화
+
+            // 이미지 색상 초기화
+            IntroduceButton.GetComponent<Image>().color =
+            isClear ? Color.white : new Color(0.5f, 0.5f, 0.5f, 1f);
         }
     }
 
@@ -66,19 +75,18 @@ public class MySceneManager : MonoBehaviour
     // 체인을 걸어서 이 함수는 매 씬마다 호출된다.
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log("isClear value: " + isClear);
+
         if (scene.name == "StartScene")
         {
             TittleButton = GameObject.Find("TittleButton").GetComponent<Button>();
             IntroduceButton = GameObject.Find("IntroduceButton").GetComponent<Button>();
             IntroduceButtonImg = GameObject.Find("IntroduceButton").GetComponent <Image>();
 
+            UpdateButtonInteractability(); // 클리어 상관없이 버튼 상태 업데이트
+
             if (isClear)
             {
-                if (TittleButton != null)
-                    TittleButton.enabled = true;
-                if (IntroduceButton != null)
-                    IntroduceButton.enabled = true;
-
                 Debug.Log("버튼 잠금 해제");
                 if (IntroduceButtonImg != null)
                     IntroduceButtonImg.color = Color.white;
@@ -94,5 +102,13 @@ public class MySceneManager : MonoBehaviour
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    public void ResetClear()
+    {
+        isClear = false; // 클리어 상태를 false로 설정
+        PlayerPrefs.SetInt("FirstClear", 0); // PlayerPrefs에서 클리어 상태 초기화
+        PlayerPrefs.Save();
+        UpdateButtonInteractability(); // 버튼 상태 업데이트
     }
 }

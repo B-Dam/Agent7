@@ -16,11 +16,13 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject FirstClearPanel;
     public GameObject ClearPanel;
+    public GameObject Crosshair; // 커서 활성 비활성용
 
     public int CardCount = 0;
     float time = 30.0f;
     public bool isHidden = false;
     public bool isClear = false;
+    public bool isGameOver = false;  // 커서 활성 비활성용
 
     public bool firstClear = false;
     public bool hasShownFirstClearPanel = false;
@@ -66,9 +68,10 @@ public class GameManager : MonoBehaviour
             animator.SetBool("isLowTime", false);
         }
 
-        if (time < 0)
+        if (time < 0.0f)
         {
             GameOver();
+            isGameOver = true; // 커서 활성 비활성용
         }
     }
 
@@ -113,6 +116,10 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
+        if (isGameOver) return; // 커서 활성 비활성용
+        Destroy(Crosshair); // 커서 활성 비활성용
+        Cursor.visible = true; // 커서 활성 비활성용
+
         Time.timeScale = 0;
         GameOverPanel.SetActive(true);
     }

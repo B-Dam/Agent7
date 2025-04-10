@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Card : MonoBehaviour
 {
@@ -12,10 +13,14 @@ public class Card : MonoBehaviour
     public Animator Anim;
 
     public SpriteRenderer FrontImage;
+
+    private Sprite[] sprites;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -26,6 +31,8 @@ public class Card : MonoBehaviour
 
     public void Setting(int number)
     {
+        Cursor.visible = false; // 커서 활성 비활성용
+
         idx = number;
         FrontImage.sprite = Resources.Load<Sprite>($"rtan{idx}");
     }
