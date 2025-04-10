@@ -7,6 +7,9 @@ public class UITransitionManager : MonoBehaviour
     // Singleton (옵션)
     public static UITransitionManager instance;
 
+    // 클릭된 버튼 기억용 <<<<<<<<<<<<<<<
+    private int lastClickedIndex = -1;
+
     [Header("버튼 관련 (4개)")]
     public Animator buttonAnimator0;    // 버튼 0에 붙은 Animator
     public Animator buttonAnimator1;    // 버튼 1에 붙은 Animator
@@ -26,6 +29,7 @@ public class UITransitionManager : MonoBehaviour
     [Header("애니메이션 딜레이")]
     public float buttonAnimDelay = 0.5f; // 버튼 애니메이션 딜레이
     public float restoreDelay = 0.5f;    // 복원 딜레이 (텍스트 창 확인 후)
+
 
     private void Awake()
     {
@@ -49,6 +53,9 @@ public class UITransitionManager : MonoBehaviour
     /// <param name="index">클릭한 버튼의 인덱스 (0 ~ 3)</param>
     public void OnButtonClicked(int index)
     {
+        // 어떤 버튼이 눌렸는지 저장 <<<<<<<
+        lastClickedIndex = index;
+
         if (index == 0)
         {
             buttonAnimator0.SetTrigger("MoveToTopLeft");
@@ -81,8 +88,15 @@ public class UITransitionManager : MonoBehaviour
             buttonAnimator0.SetTrigger("FadeOut");
             buttonAnimator1.SetTrigger("FadeOut");
             buttonAnimator2.SetTrigger("FadeOut");
+
+            // 트리거 초기화 후 다시 설정
+            buttonAnimator3.ResetTrigger("MoveToTopLeft");
+            buttonAnimator3.ResetTrigger("ResetPosition"); // 혹시라도 꼬였을 경우 대비
+            buttonAnimator3.Play("Idle", 0, 0f); // 상태를 강제로 초기화
+
             buttonAnimator3.SetTrigger("MoveToTopLeft");
-            Debug.Log("버튼 3: MoveToTopLeft / 다른 버튼: FadeOut 트리거");
+
+            Debug.Log("버튼 3 (4번): MoveToTopLeft 트리거 전송");
             StartCoroutine(ShowTextPanelRoutine(3, buttonAnimDelay));
         }
     }
@@ -134,18 +148,44 @@ public class UITransitionManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        buttonAnimator0.SetTrigger("FadeIn");
-        buttonAnimator0.SetTrigger("ResetPosition");
+        // 모든 버튼에 대해 ResetPosition 전송
+        for (int i = 0; i < 4; i++)
+        {
+            Animator anim = GetButtonAnimator(i);
 
-        buttonAnimator1.SetTrigger("FadeIn");
-        buttonAnimator1.SetTrigger("ResetPosition");
+            if (i == lastClickedIndex)
+            {
+                anim.SetTrigger("ResetPosition");
+            }
+            else
+            {
+                anim.SetTrigger("FadeIn");
 
-        buttonAnimator2.SetTrigger("FadeIn");
-        buttonAnimator2.SetTrigger("ResetPosition");
+                // FadeIn 끝나고 ResetPosition 주기 (예: 0.3초 후) <<<<<<<<
+                StartCoroutine(DelayedTrigger(anim, "ResetPosition", 0.3f));
+            }
+        }
 
-        buttonAnimator3.SetTrigger("FadeIn");
-        buttonAnimator3.SetTrigger("ResetPosition");
+        Debug.Log("모든 버튼에 대해 ResetPosition (선택된 버튼은 FadeIn 제외)");
+    }
 
-        Debug.Log("모든 버튼에 대해 FadeIn 및 ResetPosition 트리거 전송");
+    // 딜레이 후 트리거 전송하는 코루틴 <<<<<<<<<
+    private IEnumerator DelayedTrigger(Animator anim, string triggerName, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        anim.SetTrigger(triggerName);
+    }
+
+    // 버튼 인덱스로 Animator 가져오는 헬퍼 함수 <<<<<<<
+    private Animator GetButtonAnimator(int index)
+    {
+        switch (index)
+        {
+            case 0: return buttonAnimator0;
+            case 1: return buttonAnimator1;
+            case 2: return buttonAnimator2;
+            case 3: return buttonAnimator3;
+            default: return null;
+        }
     }
 }

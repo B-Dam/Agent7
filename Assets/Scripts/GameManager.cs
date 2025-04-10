@@ -16,13 +16,17 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject FirstClearPanel;
     public GameObject ClearPanel;
-    public GameObject Crosshair; // 커서 활성 비활성용
+    // public GameObject Crosshair; // 커서 활성 비활성용
+
+    public AudioSource sfxSource;
+    public AudioClip successSFX;
+    public AudioClip failSFX;
 
     public int CardCount = 0;
     float time = 30.0f;
     public bool isHidden = false;
     public bool isClear = false;
-    public bool isGameOver = false;  // 커서 활성 비활성용
+    // public bool isGameOver = false;  // 커서 활성 비활성용
 
     public bool firstClear = false;
     public bool hasShownFirstClearPanel = false;
@@ -35,6 +39,9 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
 
         firstClear = PlayerPrefs.GetInt("FirstClear", 0) == 1;
     }
@@ -71,7 +78,7 @@ public class GameManager : MonoBehaviour
         if (time < 0.0f)
         {
             GameOver();
-            isGameOver = true; // 커서 활성 비활성용
+            // isGameOver = true; // 커서 활성 비활성용
         }
     }
 
@@ -79,6 +86,11 @@ public class GameManager : MonoBehaviour
     {
         if (firstCard.idx == secondCard.idx)
         {
+            if (sfxSource != null && successSFX != null)
+            {
+                sfxSource.PlayOneShot(successSFX, 0.05f); // 성공 효과음 재생
+            }
+
             firstCard.DestroyCard();
             secondCard.DestroyCard();
             CardCount -= 2;
@@ -106,6 +118,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (sfxSource != null && failSFX != null)
+            {
+                sfxSource.PlayOneShot(failSFX, 0.03f); // 실패 효과음 재생
+            }
+
             firstCard.CloseCard();
             secondCard.CloseCard();
         }
@@ -116,9 +133,9 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
-        if (isGameOver) return; // 커서 활성 비활성용
-        Destroy(Crosshair); // 커서 활성 비활성용
-        Cursor.visible = true; // 커서 활성 비활성용
+        // if (isGameOver) return; // 커서 활성 비활성용
+        // Destroy(Crosshair); // 커서 활성 비활성용
+        // Cursor.visible = true; // 커서 활성 비활성용
 
         Time.timeScale = 0;
         GameOverPanel.SetActive(true);

@@ -6,10 +6,12 @@ public class MySceneManager : MonoBehaviour
 {
     public static MySceneManager instance;
 
-    public Button TittleButton;
-    public Button IntroduceButton;
+    public Button tittleButton;
+    public Button introduceButton;
 
-    public Image IntroduceButtonImg;
+    public Image introduceButtonImg;
+
+    public GameObject rewardDeco;
 
     public bool isClear;
     public bool isHiddenClear;
@@ -38,16 +40,16 @@ public class MySceneManager : MonoBehaviour
 
     void UpdateButtonInteractability()
     {
-        if (TittleButton != null)
+        if (tittleButton != null)
         {
-            TittleButton.interactable = isClear; // 클리어 상태에 따라 활성화
+            tittleButton.interactable = isClear; // 클리어 상태에 따라 활성화
         }
-        if (IntroduceButton != null)
+        if (introduceButton != null)
         {
-            IntroduceButton.interactable = isClear; // 클리어 상태에 따라 활성화
+            introduceButton.interactable = isClear; // 클리어 상태에 따라 활성화
 
             // 이미지 색상 초기화
-            IntroduceButton.GetComponent<Image>().color =
+            introduceButton.GetComponent<Image>().color =
             isClear ? Color.white : new Color(0.5f, 0.5f, 0.5f, 1f);
         }
     }
@@ -79,22 +81,27 @@ public class MySceneManager : MonoBehaviour
 
         if (scene.name == "StartScene")
         {
-            TittleButton = GameObject.Find("TittleButton").GetComponent<Button>();
-            IntroduceButton = GameObject.Find("IntroduceButton").GetComponent<Button>();
-            IntroduceButtonImg = GameObject.Find("IntroduceButton").GetComponent <Image>();
+            tittleButton = GameObject.Find("TittleButton").GetComponent<Button>();
+            introduceButton = GameObject.Find("IntroduceButton").GetComponent<Button>();
+            introduceButtonImg = GameObject.Find("IntroduceButton").GetComponent <Image>();
+            GameObject rewardDeco = GameObject.Find("RewardDeco");
 
             UpdateButtonInteractability(); // 클리어 상관없이 버튼 상태 업데이트
 
             if (isClear)
             {
                 Debug.Log("버튼 잠금 해제");
-                if (IntroduceButtonImg != null)
-                    IntroduceButtonImg.color = Color.white;
+                if (introduceButtonImg != null)
+                    introduceButtonImg.color = Color.white;
             }
 
             if (isHiddenClear)
-            {
+            { 
                 Debug.Log("왕관 출력");
+                if (rewardDeco != null)
+                {
+                    rewardDeco.SetActive(true);
+                }
             }
         }
     }

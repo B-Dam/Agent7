@@ -31,7 +31,7 @@ public class Card : MonoBehaviour
 
     public void Setting(int number)
     {
-        Cursor.visible = false; // 커서 활성 비활성용
+        // Cursor.visible = false; // 커서 활성 비활성용
 
         idx = number;
         FrontImage.sprite = Resources.Load<Sprite>($"rtan{idx}");
