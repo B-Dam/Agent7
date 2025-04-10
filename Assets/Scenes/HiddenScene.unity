@@ -503,6 +503,7 @@ MonoBehaviour:
   sfxSource: {fileID: 502092206}
   successSFX: {fileID: 8300000, guid: 130a177e727814a2ea78a886ab72213d, type: 3}
   failSFX: {fileID: 8300000, guid: 80e397195ea2940b69ee7bdbded856a5, type: 3}
+  alarmSFX: {fileID: 8300000, guid: bac2e4ccca8eb63409d28dc56988a9d0, type: 3}
   CardCount: 0
   isHidden: 0
   isClear: 0

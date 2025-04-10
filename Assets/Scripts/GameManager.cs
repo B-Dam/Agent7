@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public AudioSource sfxSource;
     public AudioClip successSFX;
     public AudioClip failSFX;
+    public AudioClip alarmSFX;
 
     public int CardCount = 0;
     float time = 30.0f;
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     public bool firstClear = false;
     public bool hasShownFirstClearPanel = false;
+    private bool alarmPlaying = false;
 
     public Animator animator;
 
@@ -69,10 +71,25 @@ public class GameManager : MonoBehaviour
         if (time <= 10.0f)
         {
             animator.SetBool("isLowTime", true);
+
+            if (!alarmPlaying)
+            {
+                sfxSource.clip = alarmSFX;
+                sfxSource.loop = false; // 루프 활성화용
+                sfxSource.volume = 0.03f;
+                sfxSource.Play();
+                alarmPlaying = true;
+            }
         }
         else
         {
             animator.SetBool("isLowTime", false);
+
+            if (alarmPlaying)
+            {
+                sfxSource.Stop();
+                alarmPlaying = false;
+            }
         }
 
         if (time < 0.0f)

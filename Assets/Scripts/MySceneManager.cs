@@ -84,7 +84,7 @@ public class MySceneManager : MonoBehaviour
             tittleButton = GameObject.Find("TittleButton").GetComponent<Button>();
             introduceButton = GameObject.Find("IntroduceButton").GetComponent<Button>();
             introduceButtonImg = GameObject.Find("IntroduceButton").GetComponent <Image>();
-            GameObject rewardDeco = GameObject.Find("RewardDeco");
+            rewardDeco = GameObject.Find("RewardDeco");
 
             UpdateButtonInteractability(); // 클리어 상관없이 버튼 상태 업데이트
 
@@ -95,13 +95,15 @@ public class MySceneManager : MonoBehaviour
                     introduceButtonImg.color = Color.white;
             }
 
+            if(!isHiddenClear)
+            {
+                HideRewardDeco();
+            }
+
             if (isHiddenClear)
             { 
-                Debug.Log("왕관 출력");
-                if (rewardDeco != null)
-                {
-                    rewardDeco.SetActive(true);
-                }
+                Debug.Log("히든 클리어 조건 확인");
+                ShowRewardDeco();            
             }
         }
     }
@@ -114,8 +116,29 @@ public class MySceneManager : MonoBehaviour
     public void ResetClear()
     {
         isClear = false; // 클리어 상태를 false로 설정
+        isHiddenClear = false;
         PlayerPrefs.SetInt("FirstClear", 0); // PlayerPrefs에서 클리어 상태 초기화
+        PlayerPrefs.SetInt("HiddenClear", 0); 
         PlayerPrefs.Save();
         UpdateButtonInteractability(); // 버튼 상태 업데이트
+    }
+
+    public void HideRewardDeco()
+    {
+        if (rewardDeco != null)
+        {
+            rewardDeco.SetActive(false);
+            Debug.Log("RewardDeco 숨김");
+        }
+    }
+
+    // 오브젝트 다시 활성화
+    public void ShowRewardDeco()
+    {
+        if (rewardDeco != null)
+        {
+            rewardDeco.SetActive(true);
+            Debug.Log("RewardDeco 활성화");
+        }
     }
 }

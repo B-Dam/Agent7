@@ -62,6 +62,9 @@ public class UITransitionManager : MonoBehaviour
             buttonAnimator1.SetTrigger("FadeOut");
             buttonAnimator2.SetTrigger("FadeOut");
             buttonAnimator3.SetTrigger("FadeOut");
+
+            buttonAnimator0.ResetTrigger("ResetPosition");
+
             Debug.Log("버튼 0: MoveToTopLeft / 다른 버튼: FadeOut 트리거");
             StartCoroutine(ShowTextPanelRoutine(0, buttonAnimDelay));
         }
@@ -71,6 +74,9 @@ public class UITransitionManager : MonoBehaviour
             buttonAnimator1.SetTrigger("MoveToTopLeft");
             buttonAnimator2.SetTrigger("FadeOut");
             buttonAnimator3.SetTrigger("FadeOut");
+
+            buttonAnimator1.ResetTrigger("ResetPosition");
+
             Debug.Log("버튼 1: MoveToTopLeft / 다른 버튼: FadeOut 트리거");
             StartCoroutine(ShowTextPanelRoutine(1, buttonAnimDelay));
         }
@@ -80,6 +86,9 @@ public class UITransitionManager : MonoBehaviour
             buttonAnimator1.SetTrigger("FadeOut");
             buttonAnimator2.SetTrigger("MoveToTopLeft");
             buttonAnimator3.SetTrigger("FadeOut");
+
+            buttonAnimator2.ResetTrigger("ResetPosition");
+
             Debug.Log("버튼 2: MoveToTopLeft / 다른 버튼: FadeOut 트리거");
             StartCoroutine(ShowTextPanelRoutine(2, buttonAnimDelay));
         }
@@ -88,13 +97,9 @@ public class UITransitionManager : MonoBehaviour
             buttonAnimator0.SetTrigger("FadeOut");
             buttonAnimator1.SetTrigger("FadeOut");
             buttonAnimator2.SetTrigger("FadeOut");
-
-            // 트리거 초기화 후 다시 설정
-            buttonAnimator3.ResetTrigger("MoveToTopLeft");
-            buttonAnimator3.ResetTrigger("ResetPosition"); // 혹시라도 꼬였을 경우 대비
-            buttonAnimator3.Play("Idle", 0, 0f); // 상태를 강제로 초기화
-
             buttonAnimator3.SetTrigger("MoveToTopLeft");
+
+            buttonAnimator3.ResetTrigger("ResetPosition");
 
             Debug.Log("버튼 3 (4번): MoveToTopLeft 트리거 전송");
             StartCoroutine(ShowTextPanelRoutine(3, buttonAnimDelay));
