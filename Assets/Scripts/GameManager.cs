@@ -80,9 +80,9 @@ public class GameManager : MonoBehaviour
             if (!alarmPlaying)
             {
                 alarmSource.volume = alarmVolume;
-                sfxSource.clip = alarmSFX;
-                sfxSource.loop = false;
-                sfxSource.Play();
+                alarmSource.clip = alarmSFX;
+                alarmSource.loop = false;
+                alarmSource.Play();
                 alarmPlaying = true;
             }
         }
