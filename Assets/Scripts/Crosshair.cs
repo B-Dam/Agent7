@@ -5,13 +5,13 @@ using UnityEngine;
 public class Crosshair : MonoBehaviour
 {
     public SpriteRenderer Renderer;
-    public Sprite crosshair_0;
-    public Sprite crosshair_1;
+    public Sprite crosshair;
+
     
     // Start is called before the first frame update
     void Start()
     {
-       Renderer spriteRenderer = GetComponent<SpriteRenderer>();
+       Renderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -20,13 +20,15 @@ public class Crosshair : MonoBehaviour
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position = mousePos;
 
+        Renderer.sprite = crosshair;
+
         if (Input.GetMouseButtonDown(0))
         {
-            Renderer.sprite = crosshair_0;
+            transform.localScale = new Vector2(0.13f, 0.13f);
         }
-        if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0))
         {
-            Renderer.sprite = crosshair_1;
+            transform.localScale = new Vector2(0.1f, 0.1f);
         }
     }
 }

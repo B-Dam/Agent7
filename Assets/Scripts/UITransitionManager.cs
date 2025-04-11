@@ -19,6 +19,7 @@ public class UITransitionManager : MonoBehaviour
     // (필요하면 버튼 GameObject들도 Inspector에서 할당)
     public Button button0, button1, button2, button3;
     // 각 버튼에 대응하는 텍스트 (순서대로 4개)
+    [TextArea(3, 10)]
     public string[] buttonTexts;
 
     [Header("텍스트 패널 관련")]

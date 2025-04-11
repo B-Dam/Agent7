@@ -18,10 +18,12 @@ public class GameManager : MonoBehaviour
     public GameObject ClearPanel;
     // public GameObject Crosshair; // 커서 활성 비활성용
 
+    public AudioSource alarmSource;
     public AudioSource sfxSource;
     public AudioClip successSFX;
     public AudioClip failSFX;
     public AudioClip alarmSFX;
+    public AudioClip explodeSFX;
 
     public int CardCount = 0;
     float time = 30.0f;
@@ -34,6 +36,9 @@ public class GameManager : MonoBehaviour
     private bool alarmPlaying = false;
 
     public Animator animator;
+
+    public float defaultSFXVolume = 1.0f;
+    public float alarmVolume = 0.03f;
 
     private void Awake()
     {
@@ -74,9 +79,9 @@ public class GameManager : MonoBehaviour
 
             if (!alarmPlaying)
             {
+                alarmSource.volume = alarmVolume;
                 sfxSource.clip = alarmSFX;
-                sfxSource.loop = false; // 루프 활성화용
-                sfxSource.volume = 0.03f;
+                sfxSource.loop = false;
                 sfxSource.Play();
                 alarmPlaying = true;
             }
@@ -94,6 +99,9 @@ public class GameManager : MonoBehaviour
 
         if (time < 0.0f)
         {
+            sfxSource.volume = defaultSFXVolume;
+            sfxSource.PlayOneShot(explodeSFX, 0.01f); // 0초 폭발 효과음 재생
+
             GameOver();
             // isGameOver = true; // 커서 활성 비활성용
         }
@@ -103,10 +111,9 @@ public class GameManager : MonoBehaviour
     {
         if (firstCard.idx == secondCard.idx)
         {
-            if (sfxSource != null && successSFX != null)
-            {
-                sfxSource.PlayOneShot(successSFX, 0.05f); // 성공 효과음 재생
-            }
+            // 매치 성공: 효과음을 재생하기 전에 볼륨을 기본값으로 복원
+            sfxSource.volume = defaultSFXVolume;
+            sfxSource.PlayOneShot(successSFX, 0.05f);
 
             firstCard.DestroyCard();
             secondCard.DestroyCard();
@@ -135,10 +142,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (sfxSource != null && failSFX != null)
-            {
-                sfxSource.PlayOneShot(failSFX, 0.03f); // 실패 효과음 재생
-            }
+            sfxSource.volume = defaultSFXVolume;
+            sfxSource.PlayOneShot(failSFX, 0.03f);
 
             firstCard.CloseCard();
             secondCard.CloseCard();
